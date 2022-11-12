@@ -1,4 +1,5 @@
 export const searchUtil = ((term: string, data: any) => {
+    term = term.toLowerCase()
     let keys = data ? Object.keys(data[0]) : '' 
     let results = []
     let tempString = ''
@@ -6,7 +7,6 @@ export const searchUtil = ((term: string, data: any) => {
         for(const k of keys) {
           if(k === 'items'){
             tempString = val[k].reduce((acc: any, val: any) => {return acc + val}, '')
-            console.log(tempString)
           }
             
           let field = typeof(val[k]) == 'string'? val[k].toLowerCase(): tempString.toLowerCase()
@@ -14,10 +14,12 @@ export const searchUtil = ((term: string, data: any) => {
             if(typeof(field) == 'string'){
             let indexes: any = term?  getIndexOfSearchTerms(field, term) : -1
             if(indexes !== -1 || indexes.length > 0 )
-                field = addSpans(field, indexes, term.length)
+                {field = addSpans(val[k], indexes, term.length)
+                console.log(field)
                 val = {...val, [k]: field, isactive: false}
+              }
             }
-            if(field.includes(term.toLowerCase())){
+            if(field.toLowerCase().includes(term)){
               if(k === 'items'){
                 val = {...val, [k]: field, found: true}
               }
@@ -26,7 +28,6 @@ export const searchUtil = ((term: string, data: any) => {
         }
     }
 
-    console.log(results)
     return [...results]
 })
 

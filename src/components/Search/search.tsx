@@ -14,7 +14,7 @@ const Search: FC<any> = ({users}) => {
 
     return <div className='box'>
         <input placeholder='Search' className="input-box" value={term} onChange={onChange}/>
-        {term ? <SearchList users={result} term={term}/>: null}
+        {term ? <SearchList users={result} term={term.toLowerCase()}/>: null}
     </div>
 }
 
