@@ -3,6 +3,7 @@ export const searchUtil = ((term: string, data: any) => {
     let keys = data ? Object.keys(data[0]) : '' 
     let results: any = []
     let tempString = ''
+    let index = 0;
     for(let val of data) {
         for(const k of keys) {
           if(k === 'items'){
@@ -19,13 +20,18 @@ export const searchUtil = ((term: string, data: any) => {
               }
             }
             if(field.toLowerCase().includes(term)){
+              console.log(field, term)
               if(k === 'items'){
                 val = {...val, [k]: field, found: true}
               }
-                results.push(val)
+                if(results.length){
+                  results[index] = {...val}
+                  index = index + 1
+                }else{
+                  results.push({...val})
+                }
             }
         }
-        console.log(results)
     }
 
     return [...results]
