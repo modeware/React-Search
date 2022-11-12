@@ -1,5 +1,5 @@
 export const searchUtil = ((term: string, data: any) => {
-    term = term.toLowerCase()
+    term = term.toLowerCase().trim()
     let keys = data ? Object.keys(data[0]) : '' 
     let results: any = []
     let tempString = ''
