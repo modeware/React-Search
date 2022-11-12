@@ -4,15 +4,23 @@ import useKeyPress from '../../hooks/useKeyPress';
 const SearchList: FC<any> = ({users, term}) => {
     const arrowUpPressed = useKeyPress("ArrowUp");
     const arrowDownPressed = useKeyPress("ArrowDown");
-    let [focusedListItem, setFocusedListItem] = useState(0);
-
+    console.log('AP', arrowUpPressed)
+    console.log('DP', arrowDownPressed)
+    let [focusedListItem, setFocusedListItem] = useState(-1);
+    let [active, setActive] = useState('active');
+    const ref: any = React.createRef()
     const refs = users.map((data: any)=>{
         return React.createRef()
     })
 
+    const controlPointer = (action: any) => {
+        ref.current.style.cursor = action
+    }
+
     useEffect(()=>{
         let flIndex = focusedListItem;
         if(arrowDownPressed){
+            controlPointer('none')
             if(focusedListItem < users.length -1){
                 setFocusedListItem(focusedListItem + 1)
                 flIndex = focusedListItem + 1
@@ -27,13 +35,14 @@ const SearchList: FC<any> = ({users, term}) => {
                 inline: 'start'
               });
             }
+
         }
     },  [arrowDownPressed])
 
     useEffect(()=>{
         let flIndex = focusedListItem;
         if(arrowUpPressed){
-            console.log(arrowDownPressed, "hello")
+            controlPointer('none')
 
             if(focusedListItem < 0){
                 setFocusedListItem(0)
@@ -58,8 +67,11 @@ const SearchList: FC<any> = ({users, term}) => {
         }
     }, [arrowUpPressed])
 
+  
+
     return (
      <div 
+     ref={ref}
      className={'search-list'} 
      style={{width: '18rem', height:'250px', overflowY:'auto'}}>
         {
@@ -69,8 +81,9 @@ const SearchList: FC<any> = ({users, term}) => {
                 ref={refs[index]}
                 tabIndex={0} key={index} 
                         className={`${index === focusedListItem ? 'keyboard-active' : ''}`}
-                        onMouseEnter={()=>setFocusedListItem(index)} 
-                        onMouseLeave={()=>setFocusedListItem(-1)} 
+                         onMouseEnter={()=>{setFocusedListItem(index);controlPointer('initial')
+                        }} 
+                         onMouseLeave={()=>{setFocusedListItem(-1);controlPointer('initial')}} 
                         style={{border: "1px solid black", marginLeft:'10px', padding: '10px'}}>
                 <div style={{fontWeight:'bold'}} dangerouslySetInnerHTML={{ __html: user.id }}></div>
                 <div style={{marginLeft:'1rem'}}> - {user.found? term + ' found in items': null}</div>

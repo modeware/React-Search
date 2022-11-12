@@ -8,8 +8,7 @@ export const searchUtil = ((term: string, data: any) => {
     for(let val of data) {
         for(const k of keys) {
           if(k === 'items'){
-            tempString = val[k].reduce((acc: any, val: any) => {return acc + val}, '')
-            debugger;
+            tempString = val[k].reduce((acc: any, val: any) => {return acc + val + ''}, '')
           }
             
            field = typeof(val[k]) == 'string'? val[k].toLowerCase(): tempString.toLowerCase()
@@ -35,7 +34,6 @@ export const searchUtil = ((term: string, data: any) => {
         contains = false
 
     }
-    console.log(results)
     return [...results]
 })
 

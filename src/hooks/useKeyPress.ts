@@ -11,6 +11,7 @@ const useKeyPress = (targetKey: string) => {
             }
           };
           const keyUpHandler = ({ key }: any) => {
+            
             if (key === targetKey) {
               setKeyPressed(false);
             }
@@ -22,6 +23,7 @@ const useKeyPress = (targetKey: string) => {
           
         return () => {
             window.removeEventListener('keydown', keyDownHandler)
+            window.removeEventListener('keyup', keyDownHandler)
         }
 
     }, [targetKey])
