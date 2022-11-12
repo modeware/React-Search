@@ -22,10 +22,11 @@ export const searchUtil = ((term: string, data: any) => {
               if(k === 'items'){
                 val = {...val, [k]: field, found: true}
               }
+                results.push(val)
             }
         }
-        results.push(val)
-      }
+        console.log(results)
+    }
 
     return [...results]
 })
