@@ -1,7 +1,7 @@
 export const searchUtil = ((term: string, data: any) => {
     term = term.toLowerCase()
     let keys = data ? Object.keys(data[0]) : '' 
-    let results = []
+    let results: any = []
     let tempString = ''
     for(let val of data) {
         for(const k of keys) {
@@ -15,7 +15,6 @@ export const searchUtil = ((term: string, data: any) => {
             let indexes: any = term?  getIndexOfSearchTerms(field, term) : -1
             if(indexes !== -1 || indexes.length > 0 )
                 {field = addSpans(val[k], indexes, term.length)
-                console.log(field)
                 val = {...val, [k]: field, isactive: false}
               }
             }
@@ -23,10 +22,10 @@ export const searchUtil = ((term: string, data: any) => {
               if(k === 'items'){
                 val = {...val, [k]: field, found: true}
               }
-                results.push(val)
             }
         }
-    }
+        results.push(val)
+      }
 
     return [...results]
 })
@@ -66,7 +65,6 @@ const getIndexOfSearchTerms = (field: string, term: string) => {
       i = anotherOccurrence + 1
     ) {
       anotherOccurrence = field.indexOf(term, i);
-      console.log(anotherOccurrence, i);
       if (anotherOccurrence === -1) {
         return indexes;
       }
