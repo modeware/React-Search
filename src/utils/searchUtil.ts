@@ -3,14 +3,16 @@ export const searchUtil = ((term: string, data: any) => {
     let keys = data ? Object.keys(data[0]) : '' 
     let results: any = []
     let tempString = ''
-    let index = 0;
+    let field = null;
+    let contains = false;
     for(let val of data) {
         for(const k of keys) {
           if(k === 'items'){
             tempString = val[k].reduce((acc: any, val: any) => {return acc + val}, '')
+            debugger;
           }
             
-          let field = typeof(val[k]) == 'string'? val[k].toLowerCase(): tempString.toLowerCase()
+           field = typeof(val[k]) == 'string'? val[k].toLowerCase(): tempString.toLowerCase()
             
             if(typeof(field) == 'string'){
             let indexes: any = term?  getIndexOfSearchTerms(field, term) : -1
@@ -20,20 +22,20 @@ export const searchUtil = ((term: string, data: any) => {
               }
             }
             if(field.toLowerCase().includes(term)){
-              console.log(field, term)
+              contains = true
               if(k === 'items'){
                 val = {...val, [k]: field, found: true}
               }
-                if(results.length){
-                  results[index] = {...val}
-                  index = index + 1
-                }else{
-                  results.push({...val})
-                }
             }
         }
-    }
+        if(contains){
+          results.push(val)
 
+        }
+        contains = false
+
+    }
+    console.log(results)
     return [...results]
 })
 
