@@ -2,6 +2,7 @@ import React, { FC , useState, useEffect} from 'react';
 import useKeyPress from '../../hooks/useKeyPress';
 
 const SearchList: FC<any> = ({users, term}) => {
+    debugger;
     const arrowUpPressed = useKeyPress("ArrowUp");
     const arrowDownPressed = useKeyPress("ArrowDown");
     let [focusedListItem, setFocusedListItem] = useState(0);
@@ -20,18 +21,21 @@ const SearchList: FC<any> = ({users, term}) => {
                 setFocusedListItem(0)
                 flIndex = 0
             }
+            if(refs.length){
             refs[flIndex].current.scrollIntoView({
                 behavior: 'smooth',
                 block: 'start',
                 inline: 'start'
               });
-          
+            }
         }
     },  [arrowDownPressed])
 
     useEffect(()=>{
         let flIndex = focusedListItem;
-        if(arrowUpPressed){
+        if(!arrowUpPressed){
+            console.log(arrowDownPressed, "hello")
+
             if(focusedListItem < 0){
                 setFocusedListItem(0)
                 flIndex = 0
@@ -45,11 +49,13 @@ const SearchList: FC<any> = ({users, term}) => {
                 flIndex = users.length - 1
 
             }
+            if(refs.length){
             refs[flIndex].current.scrollIntoView({
                 behavior: 'smooth',
                 block: 'end',
                 inline: 'start'
               });
+            }
         }
     }, [arrowUpPressed])
 

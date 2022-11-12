@@ -5,7 +5,7 @@ const useKeyPress = (targetKey: string) => {
 
     useEffect(()=>{
         
-        const keyDownHandler = ({ key }: any) => {
+        const keyDownHandler = ({key }: any) => {
             if (key === targetKey) {
               setKeyPressed(true);
             }
@@ -19,11 +19,9 @@ const useKeyPress = (targetKey: string) => {
         window.addEventListener('keydown', keyDownHandler)
 
         window.addEventListener('keyup', keyUpHandler)
-
+          
         return () => {
             window.removeEventListener('keydown', keyDownHandler)
-    
-            window.addEventListener('keyup', keyUpHandler)
         }
 
     }, [targetKey])
