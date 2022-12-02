@@ -86,7 +86,14 @@ const SearchList: FC<any> = ({users, term}) => {
                          onMouseLeave={()=>{setFocusedListItem(-1);controlPointer('initial')}} 
                         style={{border: "1px solid black", marginLeft:'10px', padding: '10px'}}>
                 <div style={{fontWeight:'bold'}} dangerouslySetInnerHTML={{ __html: user.id }}></div>
-                <div style={{marginLeft:'1rem'}}> - {user.found? term + ' found in items': null}</div>
+                <div style={{marginLeft:'1rem'}}> 
+                    - { 
+                        user.found ? <>
+                            <span className='blue'>{term}</span> 
+                            <span>{' found in items'}</span>
+                                    </>: null
+                      }
+                </div>
                 <div dangerouslySetInnerHTML={{ __html: user.name }}></div>
                 <br/>
                 <div dangerouslySetInnerHTML={{ __html: user.address }}></div>
