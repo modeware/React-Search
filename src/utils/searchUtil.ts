@@ -7,25 +7,36 @@ export const searchUtil = ((term: string, data: any) => {
     let contains = false;
     for(let val of data) {
         for(const k of keys) {
-          if(k === 'items'){
-            tempString = val[k].reduce((acc: any, val: any) => {return acc + val}, '')
-          }
             
-           field = typeof(val[k]) == 'string'? val[k].toLowerCase(): tempString.toLowerCase()
-            
-            if(typeof(field) == 'string'){
-            let indexes: any = term?  getIndexOfSearchTerms(field, term) : -1
-            if(indexes !== -1 || indexes.length > 0 )
-                {field = addSpans(val[k], indexes, term.length)
-                val = {...val, [k]: field, isactive: false}
-              }
+           field = typeof(val[k]) == 'string'? val[k].toLowerCase(): val[k];
+           console.log(field);
+
+           let spannedField = addSpansOnAGivenField(field, term, val[k])
+
+           if(spannedField && typeof(spannedField) === 'string'){
+            val = {...val, [k]: spannedField, isactive: false}
+           }
+           else if(spannedField && Array.isArray(spannedField)){
+            val = {...val, itemsInArray: spannedField}
+           }
+
+            // if(typeof(field) == 'string'){
+            // let indexes: any = term?  getIndexOfSearchTerms(field, term) : -1
+            // if(indexes !== -1 || indexes.length > 0 )
+            //     {field = addSpans(val[k], indexes, term.length)
+            //     val = {...val, [k]: field, isactive: false}
+            //   }
+            // }
+            if(typeof(field) === 'string' && field.toLowerCase().includes(term)){
+              contains = true;
             }
-            if(field.toLowerCase().includes(term)){
-              contains = true
-              if(k === 'items'){
-                console.log(field)
-                val = {...val, [k]: field, found: true}
-              }
+            else if(spannedField && Array.isArray(spannedField)){
+              for(let f of spannedField){
+                if(f.toLowerCase().includes(term)){
+                  contains = true;
+                  break;
+                }
+              }  
             }
         }
         if(contains){
@@ -35,8 +46,36 @@ export const searchUtil = ((term: string, data: any) => {
         contains = false
 
     }
+    console.log(results);
     return [...results]
 })
+
+
+const addSpansOnAGivenField = (field:string | Array<any>, term: string, stringToAddSpansOn: string) => {
+  
+  if(typeof(field) == 'string' && field){
+    let indexes: any = term?  getIndexOfSearchTerms(field, term) : -1
+    if(indexes !== -1 || indexes.length > 0 )
+        {
+          return addSpans(stringToAddSpansOn, indexes, term.length)
+      }
+    }
+  else if(Array.isArray(field)){
+    let modifiedArray = [];
+    for(let f of field){
+      console.log("HERE", f)
+      let indexes: any = term?  getIndexOfSearchTerms(f.toLowerCase(), term) : -1
+      if(indexes !== -1 || indexes.length > 0 )
+      {
+         modifiedArray.push(addSpans(f, indexes, term.length))
+    }
+  }
+
+  return modifiedArray;
+    }
+  
+    return null;
+}
 
 const addSpans = (fields: string, indexes: any, termLength: number) => {
     let result = fields;
